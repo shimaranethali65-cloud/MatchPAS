@@ -1,0 +1,43 @@
+@model MatchedProposalForSupervisorDto
+@{
+    ViewData["Title"] = "Matched proposal";
+}
+
+<div class="bm-page-header">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb small mb-2">
+            <li class="breadcrumb-item"><a asp-action="Index">Review</a></li>
+            <li class="breadcrumb-item active">Matched</li>
+        </ol>
+    </nav>
+    <h1 class="h2 mb-1">@Model.Title</h1>
+    <p class="text-muted mb-0"><i class="bi bi-calendar3 me-1"></i> Matched @Model.MatchedAt.LocalDateTime.ToString("g")</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-4 order-lg-2">
+        <div class="bm-card border-0 p-4 border-start border-4 border-success">
+            <h2 class="h6 text-uppercase text-success fw-semibold mb-3">Student</h2>
+            <p class="fw-medium mb-1">@(Model.StudentDisplayName ?? "—")</p>
+            <p class="mb-0"><a href="mailto:@Model.StudentEmail">@Model.StudentEmail</a></p>
+        </div>
+    </div>
+    <div class="col-lg-8 order-lg-1">
+        <div class="bm-card border-0 p-4 mb-4">
+            <h2 class="h6 text-uppercase text-muted fw-semibold mb-2">Research area</h2>
+            <p class="mb-0">@Model.ResearchAreaName</p>
+        </div>
+        <div class="bm-card border-0 p-4 mb-4">
+            <h2 class="h6 text-uppercase text-muted fw-semibold mb-3">Abstract</h2>
+            <p class="mb-0" style="white-space: pre-wrap;">@Model.Abstract</p>
+        </div>
+        <div class="bm-card border-0 p-4">
+            <h2 class="h6 text-uppercase text-muted fw-semibold mb-3">Tech stack</h2>
+            <p class="mb-0" style="white-space: pre-wrap;">@Model.TechStack</p>
+        </div>
+    </div>
+</div>
+
+<p class="mt-4">
+    <a asp-action="Index" class="text-decoration-none"><i class="bi bi-arrow-left me-1"></i> Back to anonymous list</a>
+</p>

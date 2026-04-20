@@ -1,0 +1,47 @@
+@model AnonymousProposalDto
+@{
+    ViewData["Title"] = "Anonymous review";
+}
+
+<div class="bm-page-header">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb small mb-2">
+            <li class="breadcrumb-item"><a asp-action="Index">Review</a></li>
+            <li class="breadcrumb-item active">Proposal</li>
+        </ol>
+    </nav>
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+        <div>
+            <h1 class="h2 mb-2">@Model.Title</h1>
+            <span class="badge rounded-pill bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25">@Model.ResearchAreaName</span>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="bm-card border-0 p-4 mb-4">
+            <h2 class="h6 text-uppercase text-muted fw-semibold mb-3">Abstract</h2>
+            <p class="mb-0" style="white-space: pre-wrap;">@Model.Abstract</p>
+        </div>
+        <div class="bm-card border-0 p-4">
+            <h2 class="h6 text-uppercase text-muted fw-semibold mb-3">Tech stack</h2>
+            <p class="mb-0" style="white-space: pre-wrap;">@Model.TechStack</p>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="bm-card border-0 p-4 bg-light">
+            <h2 class="h6 fw-semibold mb-3"><i class="bi bi-shield-lock text-primary me-1"></i> Blind review</h2>
+            <p class="small text-muted mb-4">Student identity is not shown. After you confirm a match, you will see the student in the matched view.</p>
+            <form asp-action="Confirm" asp-route-id="@Model.ProposalId" method="post"
+                  data-bm-confirm
+                  data-bm-title="Confirm this match?"
+                  data-bm-message="Identities will be revealed to you and the student. This action cannot be undone from the blind review screen."
+                  data-bm-variant="primary">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="btn btn-bm-primary w-100 mb-2"><i class="bi bi-check2-circle me-1"></i> Confirm match</button>
+            </form>
+            <a class="btn btn-outline-secondary w-100" asp-action="Index">Back to list</a>
+        </div>
+    </div>
+</div>

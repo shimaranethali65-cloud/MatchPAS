@@ -1,0 +1,80 @@
+@model IReadOnlyList<AnonymousProposalDto>
+@{
+    ViewData["Title"] = "Review proposals";
+    var areas = ViewBag.SupervisorResearchAreas as IReadOnlyList<ResearchArea> ?? Array.Empty<ResearchArea>();
+    var filter = ViewBag.ResearchAreaFilter as int?;
+}
+
+<div class="bm-page-header">
+    <h1 class="h2 mb-1">Anonymous proposals</h1>
+    <p class="text-muted mb-0">Only title, abstract, and tech stack are shown. Student identity stays hidden until you confirm a match.</p>
+</div>
+
+@if (areas.Count == 0)
+{
+    <div class="alert alert-warning border-0 shadow-sm d-flex gap-3 align-items-start">
+        <i class="bi bi-exclamation-triangle-fill fs-4"></i>
+        <div>You have no research areas assigned. Ask an administrator to link your account to research areas.</div>
+    </div>
+}
+else
+{
+    <div class="bm-card border-0 p-3 p-md-4 mb-4">
+        <form method="get" asp-action="Index" class="row g-3 align-items-end">
+            <div class="col-md-6 col-lg-4">
+                <label class="form-label small fw-semibold text-muted">Filter by area</label>
+                <select name="researchAreaId" class="form-select">
+                    <option value="">All my areas</option>
+                    @foreach (var a in areas)
+                    {
+                        if (filter == a.Id)
+                        {
+                            <option value="@a.Id" selected="selected">@a.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@a.Id">@a.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-bm-outline">Apply filter</button>
+            </div>
+        </form>
+    </div>
+}
+
+@if (Model.Count == 0)
+{
+    <div class="bm-card border-0 text-center py-5 px-3">
+        <i class="bi bi-eye-slash display-4 text-muted mb-3 d-block"></i>
+        <p class="text-muted mb-0">No submitted proposals in your areas right now.</p>
+    </div>
+}
+else
+{
+    <div class="table-responsive bm-card border-0">
+        <table class="table table-hover table-bm mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Title</th>
+                    <th>Research area</th>
+                    <th class="text-end">Review</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in Model)
+                {
+                    <tr>
+                        <td class="fw-medium">@p.Title</td>
+                        <td><span class="badge rounded-pill bg-light text-dark border">@p.ResearchAreaName</span></td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-bm-primary" asp-action="Details" asp-route-id="@p.ProposalId">Open</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
