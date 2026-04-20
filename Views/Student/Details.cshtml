@@ -1,0 +1,97 @@
+@model ProjectProposal
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="bm-page-header">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb small mb-2">
+            <li class="breadcrumb-item"><a asp-action="Index">My proposals</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Details</li>
+        </ol>
+    </nav>
+    <div class="d-flex flex-wrap align-items-start justify-content-between gap-3">
+        <div>
+            <h1 class="h2 mb-2">@Model.Title</h1>
+            <p class="text-muted mb-0">
+                @await Html.PartialAsync("_ProposalStatusBadge", Model.Status)
+                <span class="mx-2">·</span>
+                @(Model.ResearchArea?.Name ?? "—")
+            </p>
+        </div>
+        <div class="d-flex flex-wrap gap-2">
+            @if (Model.Status != ProposalStatus.Matched && Model.Status != ProposalStatus.Withdrawn)
+            {
+                <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@Model.Id"><i class="bi bi-pencil me-1"></i> Edit</a>
+            }
+            @if (Model.Status == ProposalStatus.Draft)
+            {
+                <form asp-action="Submit" asp-route-id="@Model.Id" method="post" class="d-inline"
+                      data-bm-confirm
+                      data-bm-title="Submit for review?"
+                      data-bm-message="Your proposal will be visible to supervisors for blind review. You can still withdraw while it has not been matched."
+                      data-bm-variant="primary">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-bm-primary"><i class="bi bi-send me-1"></i> Submit for review</button>
+                </form>
+            }
+            @if ((Model.Status == ProposalStatus.Draft || Model.Status == ProposalStatus.Submitted) && Model.MatchRecord == null)
+            {
+                <form asp-action="Withdraw" asp-route-id="@Model.Id" method="post" class="d-inline"
+                      data-bm-confirm
+                      data-bm-title="Withdraw proposal?"
+                      data-bm-message="This will remove your proposal from the review queue. You can edit and resubmit later if it is still a draft."
+                      data-bm-variant="danger">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-outline-danger"><i class="bi bi-x-circle me-1"></i> Withdraw</button>
+                </form>
+            }
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="bm-card border-0 p-4 mb-4">
+            <h2 class="h6 text-uppercase text-muted fw-semibold mb-3">Abstract</h2>
+            <p class="mb-0" style="white-space: pre-wrap;">@Model.Abstract</p>
+        </div>
+        <div class="bm-card border-0 p-4">
+            <h2 class="h6 text-uppercase text-muted fw-semibold mb-3">Tech stack</h2>
+            <p class="mb-0" style="white-space: pre-wrap;">@Model.TechStack</p>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="bm-card border-0 p-4 mb-3">
+            <h2 class="h6 text-uppercase text-muted fw-semibold mb-3">Timeline</h2>
+            <dl class="row small mb-0">
+                <dt class="col-5 text-muted">Created</dt>
+                <dd class="col-7">@Model.CreatedAt.LocalDateTime.ToString("g")</dd>
+                <dt class="col-5 text-muted">Updated</dt>
+                <dd class="col-7">@Model.UpdatedAt.LocalDateTime.ToString("g")</dd>
+                <dt class="col-5 text-muted">Identities</dt>
+                <dd class="col-7">@(Model.IdentitiesRevealed ? "Revealed" : "Hidden")</dd>
+            </dl>
+        </div>
+        @if (Model.MatchRecord != null)
+        {
+            <div class="bm-card border-0 p-4 border-start border-4 border-success">
+                <h2 class="h6 text-uppercase text-success fw-semibold mb-3"><i class="bi bi-check-circle me-1"></i> Match</h2>
+                @if (Model.IdentitiesRevealed && Model.MatchRecord.Supervisor != null)
+                {
+                    <p class="mb-1 fw-medium">@(Model.MatchRecord.Supervisor.DisplayName ?? Model.MatchRecord.Supervisor.Email)</p>
+                    <p class="small text-muted mb-2"><a href="mailto:@Model.MatchRecord.Supervisor.Email">@Model.MatchRecord.Supervisor.Email</a></p>
+                }
+                else
+                {
+                    <p class="small text-muted mb-2">Supervisor details appear when identities are revealed.</p>
+                }
+                <p class="small text-muted mb-0">Matched @Model.MatchRecord.MatchedAt.LocalDateTime.ToString("g")</p>
+            </div>
+        }
+    </div>
+</div>
+
+<p class="mt-4">
+    <a asp-action="Index" class="text-decoration-none"><i class="bi bi-arrow-left me-1"></i> Back to list</a>
+</p>

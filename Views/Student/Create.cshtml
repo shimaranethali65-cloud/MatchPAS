@@ -1,0 +1,50 @@
+@model StudentProposalFormViewModel
+@{
+    ViewData["Title"] = "Create proposal";
+}
+
+<div class="bm-page-header">
+    <h1 class="h2 mb-1">Create proposal</h1>
+    <p class="text-muted mb-0">Saved as a draft. Submit when you are ready for anonymous supervisor review.</p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="bm-card border-0 p-4 p-md-5">
+            <form asp-action="Create" method="post">
+                @Html.AntiForgeryToken()
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+                <div class="mb-3">
+                    <label asp-for="ResearchAreaId" class="form-label fw-semibold"></label>
+                    <select asp-for="ResearchAreaId" class="form-select form-select-lg" asp-items="@(new SelectList(Model.ResearchAreas, "Id", "Name"))">
+                        <option value="">Choose a research area</option>
+                    </select>
+                    <span asp-validation-for="ResearchAreaId" class="text-danger small"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Title" class="form-label fw-semibold"></label>
+                    <input asp-for="Title" class="form-control form-control-lg" placeholder="Working title" />
+                    <span asp-validation-for="Title" class="text-danger small"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="Abstract" class="form-label fw-semibold"></label>
+                    <textarea asp-for="Abstract" class="form-control" rows="8" placeholder="Summary of your project"></textarea>
+                    <span asp-validation-for="Abstract" class="text-danger small"></span>
+                </div>
+                <div class="mb-4">
+                    <label asp-for="TechStack" class="form-label fw-semibold"></label>
+                    <textarea asp-for="TechStack" class="form-control" rows="3" placeholder="Languages, frameworks, tools"></textarea>
+                    <span asp-validation-for="TechStack" class="text-danger small"></span>
+                </div>
+                <div class="d-flex flex-wrap gap-2">
+                    <button type="submit" class="btn btn-bm-primary btn-lg"><i class="bi bi-save me-1"></i> Save draft</button>
+                    <a class="btn btn-outline-secondary btn-lg" asp-action="Index">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
