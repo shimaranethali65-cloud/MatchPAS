@@ -1,0 +1,98 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] · MatchPAS</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" crossorigin="anonymous" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/BlindMatchPAS.styles.css" asp-append-version="true" />
+</head>
+<body class="d-flex flex-column min-vh-100">
+    <header class="sticky-top bm-header">
+        <nav class="navbar navbar-expand-md navbar-dark navbar-bm py-2 py-md-2">
+            <div class="container-fluid px-3 px-md-4 px-xl-5">
+                <a class="navbar-brand bm-navbar-brand d-flex flex-column lh-sm" asp-controller="Home" asp-action="Index">
+                    <span class="bm-navbar-title">MatchPAS</span>
+                    <span class="bm-navbar-tagline d-none d-sm-block">Blind project matching</span>
+                </a>
+                <button class="navbar-toggler bm-navbar-toggler border-0 shadow-none rounded-3" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse bm-navbar-collapse" id="mainNav">
+                    <ul class="navbar-nav bm-navbar-nav me-auto mt-3 mt-md-0 mb-2 mb-md-0">
+                        <li class="nav-item">
+                            <a class="nav-link bm-navbar-link" asp-controller="Home" asp-action="Index"><i class="bi bi-house-door d-md-none me-1" aria-hidden="true"></i>Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link bm-navbar-link" asp-controller="Home" asp-action="Privacy"><i class="bi bi-shield-check d-md-none me-1" aria-hidden="true"></i>Privacy</a>
+                        </li>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            @if (User.IsInRole(RoleNames.Student))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link bm-navbar-link" asp-controller="Student" asp-action="Index"><i class="bi bi-journal-text me-1" aria-hidden="true"></i>My proposals</a>
+                                </li>
+                            }
+                            @if (User.IsInRole(RoleNames.Supervisor))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link bm-navbar-link" asp-controller="Supervisor" asp-action="Index"><i class="bi bi-eye me-1" aria-hidden="true"></i>Review</a>
+                                </li>
+                            }
+                            @if (User.IsInRole(RoleNames.Admin))
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link bm-navbar-link" asp-controller="Admin" asp-action="ResearchAreas"><i class="bi bi-diagram-3 me-1" aria-hidden="true"></i>Areas</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link bm-navbar-link" asp-controller="Admin" asp-action="SupervisorAreas"><i class="bi bi-people me-1" aria-hidden="true"></i>Supervisors</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link bm-navbar-link" asp-controller="Admin" asp-action="Matches"><i class="bi bi-link-45deg me-1" aria-hidden="true"></i>Matches</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link bm-navbar-link" asp-controller="Admin" asp-action="Users"><i class="bi bi-person-gear me-1" aria-hidden="true"></i>Users</a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main" class="flex-grow-1 @(ViewData["FullWidthMain"] as bool? == true ? "py-0" : "py-4")">
+        @if (ViewData["FullWidthMain"] as bool? == true)
+        {
+            @RenderBody()
+        }
+        else
+        {
+            <div class="container px-3 px-md-4">
+                @RenderBody()
+            </div>
+        }
+    </main>
+
+    <footer class="bm-footer mt-auto">
+        <div class="container-fluid px-3 px-md-4 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
+            <span>&copy; 2026 MatchPAS — Blind project approval matching</span>
+            <span>
+                <a asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </span>
+        </div>
+    </footer>
+
+    <partial name="_ConfirmModal" />
+    <partial name="_BmToasts" />
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
