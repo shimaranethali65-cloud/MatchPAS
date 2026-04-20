@@ -1,0 +1,60 @@
+@model SupervisorAreasEditViewModel
+@{
+    ViewData["Title"] = "Assign research areas";
+}
+
+<div class="bm-page-header">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb small mb-2">
+            <li class="breadcrumb-item"><a asp-action="SupervisorAreas">Supervisors</a></li>
+            <li class="breadcrumb-item active">Assign areas</li>
+        </ol>
+    </nav>
+    <h1 class="h2 mb-1">Assign research areas</h1>
+    <p class="text-muted mb-0">
+        <strong>@(Model.DisplayName ?? Model.Email)</strong>
+        <span class="mx-1">·</span>
+        <span class="small">@Model.Email</span>
+    </p>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="bm-card border-0 p-4 p-md-5">
+            @if (Model.Areas.Count == 0)
+            {
+                <div class="alert alert-warning border-0 mb-0">
+                    There are no research areas in the system. <a asp-action="CreateResearchArea">Create research areas</a> first.
+                </div>
+            }
+            else
+            {
+                <form asp-action="EditSupervisorAreas" asp-route-id="@Model.SupervisorId" method="post"
+                      data-bm-confirm
+                      data-bm-title="Save assignments?"
+                      data-bm-message="This updates which research areas this supervisor can use for anonymous review and matching."
+                      data-bm-variant="primary">
+                    @Html.AntiForgeryToken()
+                    <p class="text-muted small mb-3">Check every area this supervisor should use to see anonymous proposals and confirm matches.</p>
+                    <div class="vstack gap-2 mb-4">
+                        @foreach (var a in Model.Areas)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox"
+                                       name="selectedResearchAreaIds"
+                                       value="@a.ResearchAreaId"
+                                       id="area_@a.ResearchAreaId"
+                                       @(a.IsSelected ? "checked" : null) />
+                                <label class="form-check-label" for="area_@a.ResearchAreaId">@a.Name</label>
+                            </div>
+                        }
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button type="submit" class="btn btn-bm-primary btn-lg">Save assignments</button>
+                        <a class="btn btn-outline-secondary btn-lg" asp-action="SupervisorAreas">Cancel</a>
+                    </div>
+                </form>
+            }
+        </div>
+    </div>
+</div>
