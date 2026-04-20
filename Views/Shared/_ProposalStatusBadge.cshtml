@@ -1,0 +1,12 @@
+@model ProposalStatus
+@{
+    var (cls, label) = Model switch
+    {
+        ProposalStatus.Draft => ("bg-secondary", "Draft"),
+        ProposalStatus.Submitted => ("bg-primary", "Submitted"),
+        ProposalStatus.Withdrawn => ("bg-warning text-dark", "Withdrawn"),
+        ProposalStatus.Matched => ("bg-success", "Matched"),
+        _ => ("bg-secondary", Model.ToString())
+    };
+}
+<span class="badge rounded-pill @cls">@label</span>
