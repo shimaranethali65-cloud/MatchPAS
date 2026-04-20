@@ -1,0 +1,106 @@
+@model MatchInterventionViewModel
+@{
+    ViewData["Title"] = "Match override";
+    var canPick = Model.EligibleSupervisors.Count > 0;
+}
+
+<div class="bm-page-header d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+    <div>
+        <h1 class="h2 mb-1">Match override</h1>
+        <p class="text-muted mb-0">Administrative actions for proposal #@Model.ProposalId</p>
+    </div>
+    <a class="btn btn-outline-primary" asp-action="Matches"><i class="bi bi-link-45deg me-1"></i> Back to matches</a>
+</div>
+
+<div class="bm-card border-0 p-4 mb-4">
+    <h2 class="h6 text-uppercase text-muted fw-semibold mb-3">Proposal</h2>
+    <dl class="row small mb-0">
+        <dt class="col-sm-3 text-muted">Title</dt>
+        <dd class="col-sm-9 fw-medium">@Model.Title</dd>
+        <dt class="col-sm-3 text-muted">Area</dt>
+        <dd class="col-sm-9">@Model.ResearchAreaName</dd>
+        <dt class="col-sm-3 text-muted">Student</dt>
+        <dd class="col-sm-9">@Model.StudentEmail</dd>
+        <dt class="col-sm-3 text-muted">Status</dt>
+        <dd class="col-sm-9">@Model.Status</dd>
+        @if (Model.HasMatch)
+        {
+            <dt class="col-sm-3 text-muted">Matched supervisor</dt>
+            <dd class="col-sm-9">@Model.CurrentSupervisorEmail</dd>
+            <dt class="col-sm-3 text-muted">Matched at</dt>
+            <dd class="col-sm-9">@(Model.MatchedAt?.LocalDateTime.ToString("g") ?? "—")</dd>
+        }
+    </dl>
+</div>
+
+@if (!canPick && (Model.Status == ProposalStatus.Submitted || Model.HasMatch))
+{
+    <div class="alert alert-warning">
+        No supervisors are assigned to this research area. Assign supervisors under <a asp-action="SupervisorAreas">Supervisors</a> first.
+    </div>
+}
+
+@if (Model.HasMatch)
+{
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="bm-card border-0 p-4 h-100">
+                <h2 class="h6 fw-semibold mb-3"><i class="bi bi-x-circle text-danger me-1"></i> Clear match</h2>
+                <p class="small text-muted">Removes the match, sets the proposal back to <strong>Submitted</strong>, and hides identities again for blind review.</p>
+                <form asp-action="ClearMatch" asp-route-id="@Model.ProposalId" method="post"
+                      data-bm-confirm
+                      data-bm-title="Clear this match?"
+                      data-bm-message="Supervisors will see this proposal anonymously again until someone confirms a new match."
+                      data-bm-variant="danger">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-outline-danger">Clear match</button>
+                </form>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="bm-card border-0 p-4 h-100">
+                <h2 class="h6 fw-semibold mb-3"><i class="bi bi-arrow-left-right text-primary me-1"></i> Reassign supervisor</h2>
+                <p class="small text-muted">Keeps the match but moves it to another supervisor in the same research area.</p>
+                <form asp-action="ReassignMatch" asp-route-id="@Model.ProposalId" method="post">
+                    @Html.AntiForgeryToken()
+                    <div class="mb-3">
+                        <label class="form-label" for="reassign-sv">Supervisor</label>
+                        <select id="reassign-sv" name="selectedSupervisorId" class="form-select">
+                            <option value="">— Select —</option>
+                            @foreach (var s in Model.EligibleSupervisors)
+                            {
+                                <option value="@s.Id">@s.Label</option>
+                            }
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-bm-primary" disabled="@(!canPick)">Reassign</button>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+else if (Model.Status == ProposalStatus.Submitted)
+{
+    <div class="bm-card border-0 p-4">
+        <h2 class="h6 fw-semibold mb-3"><i class="bi bi-lightning-charge text-warning me-1"></i> Force match</h2>
+        <p class="small text-muted">Creates a confirmed match immediately (same outcome as a supervisor confirming in the UI).</p>
+        <form asp-action="ForceMatch" asp-route-id="@Model.ProposalId" method="post">
+            @Html.AntiForgeryToken()
+            <div class="mb-3">
+                <label class="form-label" for="force-sv">Supervisor</label>
+                <select id="force-sv" name="selectedSupervisorId" class="form-select">
+                    <option value="">— Select —</option>
+                    @foreach (var s in Model.EligibleSupervisors)
+                    {
+                        <option value="@s.Id">@s.Label</option>
+                    }
+                </select>
+            </div>
+            <button type="submit" class="btn btn-bm-primary" disabled="@(!canPick)">Force match</button>
+        </form>
+    </div>
+}
+else
+{
+    <p class="text-muted small mb-0">No override actions apply to this proposal in its current state.</p>
+}
