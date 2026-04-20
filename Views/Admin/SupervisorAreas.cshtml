@@ -1,0 +1,61 @@
+@model IReadOnlyList<SupervisorListItemViewModel>
+@{
+    ViewData["Title"] = "Supervisor research areas";
+}
+
+<div class="bm-page-header d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+    <div>
+        <h1 class="h2 mb-1">Supervisors &amp; research areas</h1>
+        <p class="text-muted mb-0">Assign which research areas each supervisor can see for blind review. Supervisors must register with the <strong>Supervisor</strong> role first.</p>
+    </div>
+    <div class="d-flex flex-wrap gap-2">
+        <a class="btn btn-outline-primary" asp-action="ResearchAreas"><i class="bi bi-diagram-3 me-1"></i> Manage areas</a>
+        <a class="btn btn-outline-primary" asp-action="Matches"><i class="bi bi-link-45deg me-1"></i> Matches</a>
+    </div>
+</div>
+
+@if (Model.Count == 0)
+{
+    <div class="bm-card border-0 text-center py-5 px-3">
+        <i class="bi bi-people display-4 text-muted mb-3 d-block"></i>
+        <p class="text-muted mb-2">No supervisor accounts yet.</p>
+        <p class="small text-muted mb-0">Ask users to <a asp-controller="Account" asp-action="Register">register</a> and choose <strong>Supervisor</strong>, then return here to assign areas.</p>
+    </div>
+}
+else
+{
+    <div class="table-responsive bm-card border-0">
+        <table class="table table-hover table-bm mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th>Supervisor</th>
+                    <th>Email</th>
+                    <th>Areas assigned</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var s in Model)
+                {
+                    <tr>
+                        <td class="fw-medium">@(s.DisplayName ?? "—")</td>
+                        <td class="small">@s.Email</td>
+                        <td>
+                            @if (s.AreaCount == 0)
+                            {
+                                <span class="badge rounded-pill bg-warning text-dark">None</span>
+                            }
+                            else
+                            {
+                                <span class="badge rounded-pill bg-success">@s.AreaCount</span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <a class="btn btn-sm btn-bm-primary" asp-action="EditSupervisorAreas" asp-route-id="@s.Id">Assign areas</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
