@@ -1,0 +1,21 @@
+@* Global confirmation dialog — forms use data-bm-confirm, data-bm-title, data-bm-message, data-bm-variant (primary|danger) *@
+<div class="modal fade" id="bmConfirmModal" tabindex="-1" aria-labelledby="bmConfirmModalTitleLabel" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow-lg bm-confirm-modal">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title d-flex align-items-center gap-2" id="bmConfirmModalTitleLabel">
+                    <span class="rounded-circle bg-primary bg-opacity-10 text-primary d-inline-flex p-2" id="bmConfirmModalIcon" aria-hidden="true">
+                        <i class="bi bi-question-circle"></i>
+                    </span>
+                    <span id="bmConfirmModalTitle">Confirm</span>
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pt-2 text-muted" id="bmConfirmModalBody"></div>
+            <div class="modal-footer border-0 pt-0 gap-2">
+                <button type="button" class="btn btn-outline-secondary px-4" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary px-4" id="bmConfirmModalBtn">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>

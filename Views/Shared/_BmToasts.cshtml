@@ -1,0 +1,34 @@
+@* Toast notifications for TempData Success / Error (popup style, bottom-right) *@
+<div id="bmToastContainer" class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 1090" aria-live="polite" aria-atomic="true">
+    @if (TempData["Success"] is string toastSuccess)
+    {
+        <div class="toast align-items-center border-0 bm-toast-success shadow" role="status" data-bs-delay="6500" data-bs-autohide="true">
+            <div class="d-flex">
+                <div class="toast-body d-flex align-items-start gap-2 py-3">
+                    <i class="bi bi-check-circle-fill fs-5 flex-shrink-0 mt-1"></i>
+                    <span>@toastSuccess</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 mt-2 flex-shrink-0" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    }
+    @if (TempData["Error"] is string toastError)
+    {
+        <div class="toast align-items-center border-0 bm-toast-error shadow" role="alert" data-bs-delay="8500" data-bs-autohide="true">
+            <div class="d-flex">
+                <div class="toast-body d-flex align-items-start gap-2 py-3">
+                    <i class="bi bi-exclamation-triangle-fill fs-5 flex-shrink-0 mt-1"></i>
+                    <span>@toastError</span>
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 mt-2 flex-shrink-0" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+        </div>
+    }
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('#bmToastContainer .toast').forEach(function (el) {
+            bootstrap.Toast.getOrCreateInstance(el).show();
+        });
+    });
+</script>
