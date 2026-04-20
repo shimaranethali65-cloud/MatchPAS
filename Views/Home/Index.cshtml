@@ -1,0 +1,90 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<section class="bm-hero mb-4 mb-md-5">
+    <div class="container-fluid px-0">
+        <div class="row align-items-center g-4">
+            <div class="col-lg-7">
+                <p class="text-white-50 text-uppercase small fw-semibold mb-2" style="letter-spacing: .06em;">Project approval · Anonymous review</p>
+                <h1 class="display-5 fw-bold mb-3">Match students and supervisors <span class="text-bm-accent">without bias</span></h1>
+                <p class="lead text-white-50 mb-4">Submit proposals, browse by research area as a supervisor, and confirm a match when you are ready. Identities stay hidden until both sides agree.</p>
+                <div class="d-flex flex-wrap gap-2">
+                    @if (User.Identity?.IsAuthenticated != true)
+                    {
+                        <a class="btn btn-light btn-lg px-4 shadow-sm" asp-controller="Account" asp-action="Register">Get started</a>
+                        <a class="btn btn-outline-light btn-lg px-4" asp-controller="Account" asp-action="Login">Log in</a>
+                    }
+                    else
+                    {
+                        @if (User.IsInRole(RoleNames.Student))
+                        {
+                            <a class="btn btn-light btn-lg px-4 shadow-sm" asp-controller="Student" asp-action="Index">My proposals</a>
+                        }
+                        @if (User.IsInRole(RoleNames.Supervisor))
+                        {
+                            <a class="btn btn-light btn-lg px-4 shadow-sm" asp-controller="Supervisor" asp-action="Index">Review proposals</a>
+                        }
+                        @if (User.IsInRole(RoleNames.Admin))
+                        {
+                            <a class="btn btn-light btn-lg px-4 shadow-sm" asp-controller="Admin" asp-action="ResearchAreas">Admin console</a>
+                        }
+                        @if (!User.IsInRole(RoleNames.Student) && !User.IsInRole(RoleNames.Supervisor) && !User.IsInRole(RoleNames.Admin))
+                        {
+                            <span class="text-white-50">Your account has no role assigned yet. Contact an administrator.</span>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="col-lg-5 d-none d-lg-block text-center text-lg-end">
+                <div class="rounded-4 bg-white bg-opacity-10 p-4 d-inline-block">
+                    <i class="bi bi-shuffle display-4 text-white-50" aria-hidden="true"></i>
+                    <p class="small text-white-50 mb-0 mt-2">Blind → Match → Reveal</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="bm-card p-4 bm-feature-card h-100">
+            <div class="bm-feature-icon student"><i class="bi bi-mortarboard-fill"></i></div>
+            <h2 class="h5 fw-bold">Students</h2>
+            <p class="text-muted small mb-0">Draft and submit proposals, edit or withdraw before a match, then see your supervisor once the match is confirmed.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="bm-card p-4 bm-feature-card h-100">
+            <div class="bm-feature-icon supervisor"><i class="bi bi-incognito"></i></div>
+            <h2 class="h5 fw-bold">Supervisors</h2>
+            <p class="text-muted small mb-0">Browse anonymous proposals in your research areas. Only title, abstract, and tech stack are visible until you confirm.</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="bm-card p-4 bm-feature-card h-100">
+            <div class="bm-feature-icon admin"><i class="bi bi-gear-fill"></i></div>
+            <h2 class="h5 fw-bold">Administrators</h2>
+            <p class="text-muted small mb-0">Maintain research areas and oversee matches across the system.</p>
+        </div>
+    </div>
+</div>
+
+<div class="bm-card p-4 p-md-5 border-0">
+    <div class="row align-items-center g-3">
+        <div class="col-md">
+            <h2 class="h5 mb-2"><i class="bi bi-info-circle text-bm-accent me-2"></i>How it works</h2>
+            <ol class="mb-0 text-muted ps-3">
+                <li class="mb-2">Students create a proposal and submit it for review.</li>
+                <li class="mb-2">Supervisors see proposals only by research area—no student identity.</li>
+                <li>After a supervisor confirms a match, identities are revealed to both parties.</li>
+            </ol>
+        </div>
+        @if (User.Identity?.IsAuthenticated != true)
+        {
+            <div class="col-md-auto">
+                <a class="btn btn-bm-outline btn-lg" asp-controller="Account" asp-action="Register">Get started</a>
+            </div>
+        }
+    </div>
+</div>

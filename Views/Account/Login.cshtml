@@ -1,0 +1,85 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Log in";
+    ViewData["FullWidthMain"] = true;
+    var returnUrl = ViewData["ReturnUrl"] as string;
+}
+
+<div class="container-fluid bm-login-page px-0">
+    <div class="row g-0 align-items-stretch bm-login-row">
+        <div class="col-12 col-lg-6 d-flex align-items-center justify-content-center justify-content-lg-start">
+            <div class="w-100 py-5 px-4 px-md-5 px-xl-5 bm-login-form-wrap">
+                <div class="text-center text-lg-start mb-4">
+                    <div class="bm-icon-circle mx-auto mx-lg-0 mb-3">
+                        <i class="bi bi-box-arrow-in-right fs-3" aria-hidden="true"></i>
+                    </div>
+                    <h1 class="h3 mb-1">Welcome back</h1>
+                    <p class="text-muted mb-0">Sign in to MatchPAS</p>
+                </div>
+                <form asp-action="Login" asp-route-returnUrl="@returnUrl" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="ModelOnly" class="text-danger small"></div>
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label"></label>
+                        <input asp-for="Email" class="form-control form-control-lg bm-input-underline" autocomplete="username" placeholder="you@@example.edu" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label"></label>
+                        <input asp-for="Password" class="form-control form-control-lg bm-input-underline" autocomplete="current-password" />
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-4 form-check">
+                        <input asp-for="RememberMe" class="form-check-input" />
+                        <label asp-for="RememberMe" class="form-check-label"></label>
+                    </div>
+                    <button type="submit" class="btn btn-bm-primary btn-lg w-100">Log in</button>
+                </form>
+                <p class="text-center text-lg-start text-muted small mt-4 mb-0">
+                    No account? <a asp-action="Register">Register</a>
+                </p>
+            </div>
+        </div>
+        <div class="col-lg-6 bm-login-visual d-none d-lg-flex flex-column">
+            <div class="bm-login-visual-inner w-100 d-flex flex-column flex-grow-1 gap-3 p-3 p-xl-4">
+                <div class="bm-login-visual-slot bm-login-visual-hero rounded-4 position-relative overflow-hidden flex-grow-1">
+                    <img src="https://img.freepik.com/free-photo/young-woman-attend-courses-girl-student-studying-holding-notebooks-showing-thumb-up-approval-recommending-company-standing-blue-background_1258-70145.jpg"
+                         class="bm-login-visual-img"
+                         alt="Student with notebooks giving a thumbs-up"
+                         width="800"
+                         height="600"
+                         decoding="async"
+                         fetchpriority="high" />
+                </div>
+                <div class="row g-3 flex-shrink-0">
+                    <div class="col-6">
+                        <div class="bm-login-visual-slot bm-login-visual-thumb bm-login-visual-thumb-a rounded-4 position-relative overflow-hidden h-100">
+                            <img src="https://img.freepik.com/free-photo/happy-college-students-communicating-with-their-professor-hallway_637285-9249.jpg?semt=ais_hybrid&amp;w=740&amp;q=80"
+                                 class="bm-login-visual-img"
+                                 alt="Students talking with a professor in a hallway"
+                                 width="400"
+                                 height="300"
+                                 loading="lazy"
+                                 decoding="async" />
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="bm-login-visual-slot bm-login-visual-thumb bm-login-visual-thumb-b rounded-4 position-relative overflow-hidden h-100">
+                            <img src="https://cms-resources.prd.timeshighereducation.com/sites/default/files/styles/featured_image/public/2022-10/Mentoring%20disabled%20student.jpg?itok=UJ04rm2e"
+                                 class="bm-login-visual-img"
+                                 alt="Mentor working with a student at a desk"
+                                 width="400"
+                                 height="300"
+                                 loading="lazy"
+                                 decoding="async" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
